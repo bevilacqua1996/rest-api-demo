@@ -18,8 +18,8 @@ public class ClientController {
     }
 
     @PostMapping
-    public ResponseEntity<ClienteDTO> createClient(@RequestBody @Valid ClienteDTO cliente) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(cliente);
+    public ResponseEntity<ClienteDTO> createClient(@RequestBody @Valid ClienteDTO client) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(client);
     }
 }
 
