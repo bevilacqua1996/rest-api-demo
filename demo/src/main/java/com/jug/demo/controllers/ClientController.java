@@ -4,6 +4,7 @@ import com.jug.demo.generated.controllers.DemoApi;
 import com.jug.demo.generated.models.ClientRequest;
 import com.jug.demo.generated.models.ClientResponse;
 import com.jug.demo.services.ClientService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,14 +34,11 @@ public class ClientController implements DemoApi {
     @Override
     public ResponseEntity<ClientResponse> getClientById(Integer id) {
         Optional<ClientResponse> entity = clientService.getClientById(id);
-        return entity.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        return entity.map(ResponseEntity::ok).get();
     }
 
     @Override
-    public ResponseEntity<ClientResponse> updateClient(Integer id, ClientRequest clientRequest) {
-        if (!clientService.getClientById(id).isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+    public ResponseEntity<ClientResponse> updateClient(Integer id, @Valid ClientRequest clientRequest) {
         clientRequest.setId(id); // Garante que o ID informado é mantido
         ClientResponse updatedEntity = clientService.updateClient(id, clientRequest);
         return ResponseEntity.ok(updatedEntity);
@@ -48,9 +46,6 @@ public class ClientController implements DemoApi {
 
     @Override
     public ResponseEntity<Void> deleteClient(Integer id) {
-        if (!clientService.getClientById(id).isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
         clientService.deleteClient(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

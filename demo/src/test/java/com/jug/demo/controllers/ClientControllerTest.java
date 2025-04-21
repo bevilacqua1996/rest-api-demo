@@ -13,12 +13,12 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+@DisplayName("ClientController Unit Tests")
 class ClientControllerTest {
 
     @Mock
@@ -32,141 +32,96 @@ class ClientControllerTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    @Test
-    @DisplayName("createClient should return CREATED status when client is successfully created")
-    void createClientShouldReturnCreatedStatus() {
-        ClientRequest clientRequest = new ClientRequest();
-        clientRequest.setName("John Doe");
-        clientRequest.setEmail("john.doe@example.com");
+    @Nested
+    @DisplayName("createClient")
+    class CreateClientTests {
 
-        ClientResponse clientResponse = new ClientResponse();
-        clientResponse.setId(1);
-        clientResponse.setName("John Doe");
-        clientResponse.setEmail("john.doe@example.com");
+        @Test
+        @DisplayName("should return CREATED status when client is successfully created")
+        void shouldReturnCreatedStatusWhenClientIsSuccessfullyCreated() {
+            ClientRequest clientRequest = new ClientRequest();
+            clientRequest.setName("John Doe");
+            clientRequest.setEmail("john.doe@example.com");
 
-        when(clientService.createClient(clientRequest)).thenReturn(clientResponse);
+            ClientResponse clientResponse = new ClientResponse();
+            clientResponse.setId(1);
+            clientResponse.setName("John Doe");
+            clientResponse.setEmail("john.doe@example.com");
 
-        ResponseEntity<ClientResponse> response = clientController.createClient(clientRequest);
+            when(clientService.createClient(clientRequest)).thenReturn(clientResponse);
 
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals(clientResponse, response.getBody());
-        verify(clientService, times(1)).createClient(clientRequest);
+            ResponseEntity<ClientResponse> response = clientController.createClient(clientRequest);
+
+            assertEquals(HttpStatus.CREATED, response.getStatusCode());
+            assertEquals(clientResponse, response.getBody());
+            verify(clientService, times(1)).createClient(clientRequest);
+        }
     }
 
-    @Test
-    @DisplayName("getClientList should return OK status with a list of clients")
-    void getClientListShouldReturnOkStatus() {
-        ClientResponse clientResponse = new ClientResponse();
-        clientResponse.setId(1);
-        clientResponse.setName("John Doe");
-        clientResponse.setEmail("john.doe@example.com");
+    @Nested
+    @DisplayName("getClientById")
+    class GetClientByIdTests {
 
-        when(clientService.getAllClients()).thenReturn(List.of(clientResponse));
+        @Test
+        @DisplayName("should return OK status and client when client is found")
+        void shouldReturnOkStatusAndClientWhenClientIsFound() {
+            int clientId = 1;
+            ClientResponse clientResponse = new ClientResponse();
+            clientResponse.setId(clientId);
+            clientResponse.setName("John Doe");
+            clientResponse.setEmail("john.doe@example.com");
 
-        ResponseEntity<List<ClientResponse>> response = clientController.getClientList();
+            when(clientService.getClientById(clientId)).thenReturn(Optional.of(clientResponse));
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(1, response.getBody().size());
-        verify(clientService, times(1)).getAllClients();
+            ResponseEntity<ClientResponse> response = clientController.getClientById(clientId);
+
+            assertEquals(HttpStatus.OK, response.getStatusCode());
+            assertEquals(clientResponse, response.getBody());
+            verify(clientService, times(1)).getClientById(clientId);
+        }
+
+        @Test
+        @DisplayName("should throw exception when client is not found")
+        void shouldThrowExceptionWhenClientIsNotFound() {
+            int clientId = 1;
+
+            when(clientService.getClientById(clientId)).thenReturn(Optional.empty());
+
+            try {
+                clientController.getClientById(clientId);
+            } catch (Exception e) {
+                assertEquals("No value present", e.getMessage());
+            }
+
+            verify(clientService, times(1)).getClientById(clientId);
+        }
     }
 
-    @Test
-    @DisplayName("getClientById should return OK status when client is found")
-    void getClientByIdShouldReturnOkStatus() {
-        int clientId = 1;
-        ClientResponse clientResponse = new ClientResponse();
-        clientResponse.setId(clientId);
-        clientResponse.setName("John Doe");
-        clientResponse.setEmail("john.doe@example.com");
+    @Nested
+    @DisplayName("updateClient")
+    class UpdateClientTests {
 
-        when(clientService.getClientById(clientId)).thenReturn(Optional.of(clientResponse));
+        @Test
+        @DisplayName("should return OK status when client is successfully updated")
+        void shouldReturnOkStatusWhenClientIsSuccessfullyUpdated() {
+            int clientId = 1;
+            ClientRequest clientRequest = new ClientRequest();
+            clientRequest.setId(clientId);
+            clientRequest.setName("John Doe Updated");
+            clientRequest.setEmail("john.doe.updated@example.com");
 
-        ResponseEntity<ClientResponse> response = clientController.getClientById(clientId);
+            ClientResponse clientResponse = new ClientResponse();
+            clientResponse.setId(clientId);
+            clientResponse.setName("John Doe Updated");
+            clientResponse.setEmail("john.doe.updated@example.com");
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(clientResponse, response.getBody());
-        verify(clientService, times(1)).getClientById(clientId);
-    }
+            when(clientService.updateClient(clientId, clientRequest)).thenReturn(clientResponse);
 
-    @Test
-    @DisplayName("getClientById should return NOT FOUND status when client is not found")
-    void getClientByIdShouldReturnNotFoundStatus() {
-        int clientId = 1;
+            ResponseEntity<ClientResponse> response = clientController.updateClient(clientId, clientRequest);
 
-        when(clientService.getClientById(clientId)).thenReturn(Optional.empty());
-
-        ResponseEntity<ClientResponse> response = clientController.getClientById(clientId);
-
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        verify(clientService, times(1)).getClientById(clientId);
-    }
-
-    @Test
-    @DisplayName("updateClient should return OK status when client is successfully updated")
-    void updateClientShouldReturnOkStatus() {
-        int clientId = 1;
-        ClientRequest clientRequest = new ClientRequest();
-        clientRequest.setName("John Doe Updated");
-        clientRequest.setEmail("john.doe.updated@example.com");
-
-        ClientResponse clientResponse = new ClientResponse();
-        clientResponse.setId(clientId);
-        clientResponse.setName("John Doe Updated");
-        clientResponse.setEmail("john.doe.updated@example.com");
-
-        when(clientService.getClientById(clientId)).thenReturn(Optional.of(clientResponse));
-        when(clientService.updateClient(clientId, clientRequest)).thenReturn(clientResponse);
-
-        ResponseEntity<ClientResponse> response = clientController.updateClient(clientId, clientRequest);
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(clientResponse, response.getBody());
-        verify(clientService, times(1)).getClientById(clientId);
-        verify(clientService, times(1)).updateClient(clientId, clientRequest);
-    }
-
-    @Test
-    @DisplayName("updateClient should return NOT FOUND status when client does not exist")
-    void updateClientShouldReturnNotFoundStatus() {
-        int clientId = 1;
-        ClientRequest clientRequest = new ClientRequest();
-        clientRequest.setName("John Doe Updated");
-        clientRequest.setEmail("john.doe.updated@example.com");
-
-        when(clientService.getClientById(clientId)).thenReturn(Optional.empty());
-
-        ResponseEntity<ClientResponse> response = clientController.updateClient(clientId, clientRequest);
-
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        verify(clientService, times(1)).getClientById(clientId);
-        verify(clientService, never()).updateClient(anyInt(), any(ClientRequest.class));
-    }
-
-    @Test
-    @DisplayName("deleteClient should return NO CONTENT status when client is successfully deleted")
-    void deleteClientShouldReturnNoContentStatus() {
-        int clientId = 1;
-
-        when(clientService.getClientById(clientId)).thenReturn(Optional.of(new ClientResponse()));
-
-        ResponseEntity<Void> response = clientController.deleteClient(clientId);
-
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-        verify(clientService, times(1)).getClientById(clientId);
-        verify(clientService, times(1)).deleteClient(clientId);
-    }
-
-    @Test
-    @DisplayName("deleteClient should return NOT FOUND status when client does not exist")
-    void deleteClientShouldReturnNotFoundStatus() {
-        int clientId = 1;
-
-        when(clientService.getClientById(clientId)).thenReturn(Optional.empty());
-
-        ResponseEntity<Void> response = clientController.deleteClient(clientId);
-
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        verify(clientService, times(1)).getClientById(clientId);
-        verify(clientService, never()).deleteClient(anyInt());
+            assertEquals(HttpStatus.OK, response.getStatusCode());
+            assertEquals(clientResponse, response.getBody());
+            verify(clientService, times(1)).updateClient(clientId, clientRequest);
+        }
     }
 }

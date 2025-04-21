@@ -1,6 +1,7 @@
 package com.jug.demo.services.impl;
 
 import com.jug.demo.entities.ClientEntity;
+import com.jug.demo.exceptions.ClientNotFoundException;
 import com.jug.demo.generated.models.ClientRequest;
 import com.jug.demo.generated.models.ClientResponse;
 import com.jug.demo.mappers.ClientMapper;
@@ -36,15 +37,15 @@ public class ClientserviceImpl implements ClientService {
 
     @Override
     public Optional<ClientResponse> getClientById(Integer id) {
-        return clientRepository.findById(Long.valueOf(id))
-                .map(ClientMapper::toResponse);
+        return Optional.of(clientRepository.findById(Long.valueOf(id))
+                .map(ClientMapper::toResponse).orElseThrow(ClientNotFoundException::new));
     }
 
     @Override
     @Transactional
     public ClientResponse updateClient(Integer id, ClientRequest clientRequest) {
         if (!clientRepository.existsById(Long.valueOf(id))) {
-            return null;
+            throw new ClientNotFoundException(id);
         }
         ClientEntity clientEntity = ClientMapper.toEntity(clientRequest);
         clientEntity.setId(Long.valueOf(id)); // Garante que o ID é mantido
@@ -56,7 +57,7 @@ public class ClientserviceImpl implements ClientService {
     @Transactional
     public void deleteClient(Integer id) {
         if (!clientRepository.existsById(Long.valueOf(id))) {
-            return; // Ou lance uma exceção, dependendo da lógica de negócio
+            throw new ClientNotFoundException(id);
         }
         clientRepository.deleteById(Long.valueOf(id));
     }
