@@ -1,0 +1,117 @@
+openapi: 3.0.1
+info:
+  title: API de Clientes
+  description: API para gerenciar clientes.
+  version: 1.0.0
+paths:
+  /demo/v1/client:
+    post:
+      summary: Cria um novo cliente
+      description: Cria uma nova entidade de cliente.
+      operationId: createClient
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientRequest'
+      responses:
+        '201':
+          description: Cliente criado com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientResponse'
+    get:
+      summary: Lista todos os clientes
+      description: Retorna uma lista de clientes cadastrados.
+      operationId: getClientList
+      responses:
+        '200':
+          description: Lista de clientes.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClientResponse'
+  /demo/v1/client/{id}:
+    get:
+      summary: Busca cliente por ID
+      description: Retorna os dados de um cliente específico.
+      operationId: getClientById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Cliente encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientResponse'
+        '404':
+          description: Cliente não encontrado.
+    put:
+      summary: Atualiza um cliente
+      description: Atualiza os dados de um cliente existente.
+      operationId: updateClient
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientRequest'
+      responses:
+        '200':
+          description: Cliente atualizado com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientResponse'
+        '404':
+          description: Cliente não encontrado.
+    delete:
+      summary: Deleta um cliente
+      description: Remove um cliente do sistema.
+      operationId: deleteClient
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Cliente deletado com sucesso.
+        '404':
+          description: Cliente não encontrado.
+components:
+  schemas:
+    ClientResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+    ClientRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
