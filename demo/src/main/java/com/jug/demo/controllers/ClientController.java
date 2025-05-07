@@ -1,6 +1,6 @@
 package com.jug.demo.controllers;
 
-import com.jug.demo.generated.controllers.DemoApi;
+import com.jug.demo.generated.controllers.ClientApi;
 import com.jug.demo.generated.models.ClientRequest;
 import com.jug.demo.generated.models.ClientResponse;
 import com.jug.demo.services.ClientService;
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-public class ClientController implements DemoApi {
+public class ClientController implements ClientApi {
 
     @Autowired
     private ClientService clientService;
@@ -50,4 +50,8 @@ public class ClientController implements DemoApi {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @Override
+    public ResponseEntity<String> getClientReport(Integer id) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(clientService.getClientReport(id));
+    }
 }

@@ -3,8 +3,10 @@ info:
   title: API de Clientes
   description: API para gerenciar clientes.
   version: 1.0.0
+servers:
+  - url: /demo/v1
 paths:
-  /demo/v1/client:
+  /client:
     post:
       summary: Cria um novo cliente
       description: Cria uma nova entidade de cliente.
@@ -35,7 +37,27 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ClientResponse'
-  /demo/v1/client/{id}:
+  /client/{id}/report:
+    get:
+      summary: Gera report do cliente
+      description: Retorna um report detalhado de um cliente específico.
+      operationId: getClientReport
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Report de clientes.
+          content:
+            text/plain:
+              schema:
+                type: string
+        '404':
+          description: Cliente não encontrado.
+  /client/{id}:
     get:
       summary: Busca cliente por ID
       description: Retorna os dados de um cliente específico.
@@ -95,6 +117,118 @@ paths:
           description: Cliente deletado com sucesso.
         '404':
           description: Cliente não encontrado.
+  /product:
+    post:
+      summary: Cria um novo produto
+      description: Cria uma nova entidade de produto.
+      operationId: createProduct
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductRequest'
+      responses:
+        '201':
+          description: Produto criado com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+    get:
+      summary: Lista todos os produtos
+      description: Retorna uma lista de produtos cadastrados.
+      operationId: getProductList
+      responses:
+        '200':
+          description: Lista de produtos.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductResponse'
+  /product/{id}/report:
+    get:
+      summary: Gera report do produto
+      description: Retorna um report detalhado de um produto específico.
+      operationId: getProductReport
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Report de produtos.
+          content:
+            text/plain:
+              schema:
+                type: string
+        '404':
+          description: produto não encontrado.
+  /product/{id}:
+    get:
+      summary: Busca produto por ID
+      description: Retorna os dados de um produto específico.
+      operationId: getProductById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Produto encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+        '404':
+          description: Produto não encontrado.
+    put:
+      summary: Atualiza um produto
+      description: Atualiza os dados de um produto existente.
+      operationId: updateProduct
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductRequest'
+      responses:
+        '200':
+          description: Produto atualizado com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+        '404':
+          description: Produto não encontrado.
+    delete:
+      summary: Deleta um produto
+      description: Remove um produto do sistema.
+      operationId: deleteProduct
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Produto deletado com sucesso.
+        '404':
+          description: Produto não encontrado.
+
 components:
   schemas:
     ClientResponse:
@@ -118,3 +252,27 @@ components:
       required:
         - name
         - email
+    ProductResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        client:
+          type: integer
+        price:
+          type: number
+          format: float
+    ProductRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        client:
+          type: integer
+        price:
+          type: number
+          format: float

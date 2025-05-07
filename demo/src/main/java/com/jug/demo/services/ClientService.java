@@ -1,6 +1,5 @@
 package com.jug.demo.services;
 
-import com.jug.demo.entities.ClientEntity;
 import com.jug.demo.generated.models.ClientRequest;
 import com.jug.demo.generated.models.ClientResponse;
 
@@ -17,4 +16,6 @@ public interface ClientService {
     ClientResponse updateClient(Integer id, ClientRequest clientRequest);
 
     void deleteClient(Integer id);
+
+    String getClientReport(Integer id);
 }

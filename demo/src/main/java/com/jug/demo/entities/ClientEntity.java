@@ -3,7 +3,7 @@ package com.jug.demo.entities;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "demo_entity_spring")
+@Table(name = "clients")
 public class ClientEntity {
 
     @Id

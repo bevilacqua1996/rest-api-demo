@@ -7,6 +7,7 @@ import com.jug.demo.generated.models.ClientResponse;
 import com.jug.demo.mappers.ClientMapper;
 import com.jug.demo.repositories.ClientRepository;
 import com.jug.demo.services.ClientService;
+import com.jug.demo.templates.GenerateClientReport;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -60,6 +61,11 @@ public class ClientserviceImpl implements ClientService {
             throw new ClientNotFoundException(id);
         }
         clientRepository.deleteById(Long.valueOf(id));
+    }
+
+    @Override
+    public String getClientReport(Integer id) {
+        return new GenerateClientReport(id, clientRepository).generate();
     }
 
 }
