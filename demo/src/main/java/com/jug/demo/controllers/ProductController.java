@@ -3,12 +3,16 @@ package com.jug.demo.controllers;
 import com.jug.demo.generated.controllers.ProductApi;
 import com.jug.demo.generated.models.ProductRequest;
 import com.jug.demo.generated.models.ProductResponse;
+import com.jug.demo.generated.models.TaxRequest;
+import com.jug.demo.generated.models.TaxResponse;
 import com.jug.demo.services.ProductService;
+import com.jug.demo.services.TaxCreditService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +21,9 @@ public class ProductController implements ProductApi {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private TaxCreditService taxCreditService;
 
     @Override
     public ResponseEntity<ProductResponse> createProduct(ProductRequest productRequest) {
@@ -52,5 +59,14 @@ public class ProductController implements ProductApi {
     @Override
     public ResponseEntity<String> getProductReport(Integer id) {
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.getProductReport(id));
+    }
+
+    @Override
+    public ResponseEntity<TaxResponse> getProductTaxDetails(Integer id, TaxRequest taxRequest) {
+        Optional<ProductResponse> productResponse = productService.getProductById(id);
+        TaxResponse taxResponse = taxCreditService.calculateTaxCredit(taxRequest.getCountry(), BigDecimal.valueOf(productResponse.get().getPrice()));
+        taxResponse.setProductId(productResponse.get().getId());
+        taxResponse.setBasePrice(BigDecimal.valueOf(productResponse.get().getPrice()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(taxResponse);
     }
 }

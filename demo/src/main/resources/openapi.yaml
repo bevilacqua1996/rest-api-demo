@@ -168,6 +168,30 @@ paths:
                 type: string
         '404':
           description: produto não encontrado.
+  /product/{id}/tax-details:
+    post:
+      summary: Retorna detalhadamente os impostos de um produto
+      description: Retorna os impostos detalhados de um produto específico.
+      operationId: getProductTaxDetails
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaxRequest'
+      responses:
+        '201':
+          description: Produto criado com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaxResponse'
   /product/{id}:
     get:
       summary: Busca produto por ID
@@ -276,3 +300,25 @@ components:
         price:
           type: number
           format: float
+    TaxRequest:
+      type: object
+      properties:
+        country:
+          type: string
+    TaxResponse:
+      type: object
+      properties:
+        productId:
+          type: integer
+        basePrice:
+          type: number
+          format: bigdecimal
+        taxAmount:
+          type: number
+          format: bigdecimal
+        finalPrice:
+          type: number
+          format: bigdecimal
+        taxRate:
+          type: number
+          format: bigdecimal
