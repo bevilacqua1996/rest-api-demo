@@ -1,0 +1,25 @@
+package com.jug.demo.strategies;
+
+import com.jug.demo.generated.models.TaxResponse;
+
+import java.math.BigDecimal;
+
+public class MocambiqueTaxCreditStrategy implements TaxCreditStrategy{
+
+    private static final String COUNTRY = "Mocambique";
+    private static final String TAX_CREDIT = "0.05";
+
+    @Override
+    public boolean supports(String country) {
+        return COUNTRY.equalsIgnoreCase(country);
+    }
+
+    public TaxResponse calculate(BigDecimal value) {
+        return calculate(value, TAX_CREDIT);
+    }
+
+    @Override
+    public TaxResponse calculate(BigDecimal value, String taxCredit) {
+        return TaxCreditStrategy.super.calculate(value, taxCredit);
+    }
+}
