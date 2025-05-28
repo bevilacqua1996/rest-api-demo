@@ -7,11 +7,11 @@ import com.jug.demo.generated.models.ClientRequest;
 import com.jug.demo.generated.models.ClientResponse;
 import com.jug.demo.repositories.ClientRepository;
 import com.jug.demo.services.impl.ClientserviceImpl;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +19,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class ClientServiceImplTest {
 
     @InjectMocks
@@ -26,11 +27,6 @@ class ClientServiceImplTest {
 
     @Mock
     private ClientRepository clientRepository;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     void testCreateClient() {
