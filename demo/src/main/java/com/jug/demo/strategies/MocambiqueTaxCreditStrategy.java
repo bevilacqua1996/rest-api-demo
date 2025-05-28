@@ -1,9 +1,11 @@
 package com.jug.demo.strategies;
 
 import com.jug.demo.generated.models.TaxResponse;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 
+@Component
 public class MocambiqueTaxCreditStrategy implements TaxCreditStrategy{
 
     private static final String COUNTRY = "Mocambique";
