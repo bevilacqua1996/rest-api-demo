@@ -1,6 +1,8 @@
 package com.jug.demo.strategies;
 
+import com.jug.demo.clients.TaxCreditClient;
 import com.jug.demo.generated.models.TaxResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -9,7 +11,9 @@ import java.math.BigDecimal;
 public class MocambiqueTaxCreditStrategy implements TaxCreditStrategy{
 
     private static final String COUNTRY = "Mocambique";
-    private static final String TAX_CREDIT = "0.05";
+
+    @Autowired
+    private TaxCreditClient taxCreditClient;
 
     @Override
     public boolean supports(String country) {
@@ -17,7 +21,8 @@ public class MocambiqueTaxCreditStrategy implements TaxCreditStrategy{
     }
 
     public TaxResponse calculate(BigDecimal value) {
-        return calculate(value, TAX_CREDIT);
+        String taxCredit = taxCreditClient.getTaxCreditMzn();
+        return calculate(value, taxCredit);
     }
 
     @Override
