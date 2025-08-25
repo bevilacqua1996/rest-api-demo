@@ -2,6 +2,8 @@ package com.jug.demo.entities;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "clients")
 public class ClientEntity {
@@ -11,6 +13,9 @@ public class ClientEntity {
     private Long id;
     private String name;
     private String email;
+    // One client has many products
+    @OneToMany(mappedBy = "client")
+    private List<ProductEntity> products;
 
 
     public ClientEntity() {
