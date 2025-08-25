@@ -109,3 +109,28 @@ public class OpenApiConfig {
 - [OpenAPI Specification](https://swagger.io/specification/)
 
 ---
+
+## 🐘 Subindo um PostgreSQL com Docker
+
+Se você precisa de um banco PostgreSQL para testar a API, pode subir rapidamente usando Docker:
+
+```bash
+docker run --name postgres-demo \
+  -e POSTGRES_DB=meubanco \
+  -e POSTGRES_USER=usuario \
+  -e POSTGRES_PASSWORD=senha123 \
+  -p 5432:5432 \
+  -d postgres:16
+```
+
+- **POSTGRES_DB**: nome do banco de dados
+- **POSTGRES_USER**: usuário do banco
+- **POSTGRES_PASSWORD**: senha do usuário
+- **-p 5432:5432**: expõe a porta padrão do PostgreSQL
+
+Para parar e remover o container:
+
+```bash
+docker stop postgres-demo
+docker rm postgres-demo
+```
