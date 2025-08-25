@@ -39,7 +39,7 @@ class ProductServiceImplTest {
         ProductRequest productRequest = new ProductRequest();
         productRequest.setName("Test Product");
         productRequest.setPrice(99.99f);
-        productRequest.setClient(1);
+        productRequest.setClients(List.of(1));
 
         ClientEntity clientEntity = new ClientEntity();
         clientEntity.setId(1L);
@@ -50,7 +50,7 @@ class ProductServiceImplTest {
         savedEntity.setId(1L);
         savedEntity.setName("Test Product");
         savedEntity.setPrice(99.99f);
-        savedEntity.setClient(clientEntity);
+        savedEntity.setClients(List.of(clientEntity));
 
         when(clientRepository.findById(1L)).thenReturn(Optional.of(clientEntity));
         when(productRepository.save(any(ProductEntity.class))).thenReturn(savedEntity);
@@ -63,7 +63,7 @@ class ProductServiceImplTest {
         assertEquals(1, response.getId());
         assertEquals("Test Product", response.getName());
         assertEquals(99.99f, response.getPrice());
-        assertEquals(1, response.getClient());
+        assertEquals(List.of(1), response.getClients());
         verify(clientRepository).findById(1L);
         verify(productRepository).save(any(ProductEntity.class));
     }
@@ -74,7 +74,7 @@ class ProductServiceImplTest {
         ProductRequest productRequest = new ProductRequest();
         productRequest.setName("Test Product");
         productRequest.setPrice(99.99f);
-        productRequest.setClient(1);
+        productRequest.setClients(List.of(1));
 
         when(clientRepository.findById(1L)).thenReturn(Optional.empty());
 
@@ -129,7 +129,7 @@ class ProductServiceImplTest {
         assertTrue(response.isPresent());
         assertEquals("Test Product", response.get().getName());
         assertEquals(99.99f, response.get().getPrice());
-        assertEquals(1, response.get().getClient());
+        assertEquals(List.of(1), response.get().getClients());
         verify(productRepository).findById(1L);
     }
 
@@ -152,7 +152,7 @@ class ProductServiceImplTest {
         ProductRequest productRequest = new ProductRequest();
         productRequest.setName("Updated Product");
         productRequest.setPrice(149.99f);
-        productRequest.setClient(1);
+        productRequest.setClients(List.of(1));
 
         ClientEntity clientEntity = new ClientEntity();
         clientEntity.setId(1L);
@@ -173,7 +173,7 @@ class ProductServiceImplTest {
         assertNotNull(response);
         assertEquals("Updated Product", response.getName());
         assertEquals(149.99f, response.getPrice());
-        assertEquals(1, response.getClient());
+        assertEquals(List.of(1), response.getClients());
         verify(productRepository).findById(1L);
         verify(clientRepository).findById(1L);
         verify(productRepository).save(any(ProductEntity.class));
@@ -185,7 +185,7 @@ class ProductServiceImplTest {
         ProductRequest productRequest = new ProductRequest();
         productRequest.setName("Updated Product");
         productRequest.setPrice(149.99f);
-        productRequest.setClient(1);
+        productRequest.setClients(List.of(1));
 
         when(productRepository.findById(1L)).thenReturn(Optional.empty());
 
@@ -202,7 +202,7 @@ class ProductServiceImplTest {
         ProductRequest productRequest = new ProductRequest();
         productRequest.setName("Updated Product");
         productRequest.setPrice(149.99f);
-        productRequest.setClient(1);
+        productRequest.setClients(List.of(1));
 
         ClientEntity clientEntity = new ClientEntity();
         clientEntity.setId(1L);
@@ -270,7 +270,7 @@ class ProductServiceImplTest {
         entity.setId(id);
         entity.setName(name);
         entity.setPrice(price);
-        entity.setClient(client);
+        entity.setClients(List.of(client));
         return entity;
     }
 }

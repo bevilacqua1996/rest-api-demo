@@ -13,8 +13,12 @@ public class ClientEntity {
     private Long id;
     private String name;
     private String email;
-    // One client has many products
-    @OneToMany(mappedBy = "client")
+    @ManyToMany
+    @JoinTable(
+            name = "client_product",
+            joinColumns = @JoinColumn(name = "client_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
     private List<ProductEntity> products;
 
 
@@ -59,5 +63,13 @@ public class ClientEntity {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public List<ProductEntity> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<ProductEntity> products) {
+        this.products = products;
     }
 }

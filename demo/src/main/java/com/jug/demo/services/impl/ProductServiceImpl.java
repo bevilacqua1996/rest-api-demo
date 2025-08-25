@@ -1,5 +1,6 @@
 package com.jug.demo.services.impl;
 
+import com.jug.demo.entities.ClientEntity;
 import com.jug.demo.entities.ProductEntity;
 import com.jug.demo.exceptions.ClientNotFoundException;
 import com.jug.demo.generated.models.ProductRequest;
@@ -12,6 +13,7 @@ import com.jug.demo.templates.GenerateProductReport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,8 +32,19 @@ public class ProductServiceImpl implements ProductService {
         ProductEntity productEntity = new ProductEntity();
         productEntity.setName(productRequest.getName());
         productEntity.setPrice(productRequest.getPrice());
-        productEntity.setClient(clientRepository.findById(Long.valueOf(productRequest.getClient())).
-                orElseThrow(ClientNotFoundException::new));
+        List<ClientEntity> clientList = productRequest.getClients().stream()
+                .map(clientId -> clientRepository.findById(Long.valueOf(clientId))
+                        .orElseThrow(ClientNotFoundException::new))
+                .collect(Collectors.toList());
+
+        productEntity.setClients(clientList);
+        for (ClientEntity client : clientList) {
+            if (client.getProducts() == null) {
+                client.setProducts(new ArrayList<>());
+            }
+            client.getProducts().add(productEntity);
+        }
+
         ProductEntity savedProduct = productRepository.save(productEntity);
         return ProductMapper.mapToResponse(savedProduct);
     }
@@ -57,8 +70,10 @@ public class ProductServiceImpl implements ProductService {
             ProductEntity productEntity = optionalProduct.get();
             productEntity.setName(productRequest.getName());
             productEntity.setPrice(productRequest.getPrice());
-            productEntity.setClient(clientRepository.findById(Long.valueOf(productRequest.getClient())).
-                    orElseThrow(ClientNotFoundException::new));
+            productEntity.setClients(productRequest.getClients().stream()
+                    .map(clientId -> clientRepository.findById(Long.valueOf(clientId))
+                            .orElseThrow(ClientNotFoundException::new))
+                    .collect(Collectors.toList()));
             ProductEntity updatedProduct = productRepository.save(productEntity);
             return ProductMapper.mapToResponse(updatedProduct);
         }

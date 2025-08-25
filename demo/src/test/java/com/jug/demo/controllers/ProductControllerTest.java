@@ -24,7 +24,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -76,13 +77,13 @@ class ProductControllerTest {
         ProductRequest productRequest = new ProductRequest();
         productRequest.setName("Test Product");
         productRequest.setPrice(99.99f);
-        productRequest.setClient(1);
+        productRequest.setClients(List.of(1));
 
         ProductResponse productResponse = new ProductResponse();
         productResponse.setId(1);
         productResponse.setName("Test Product");
         productResponse.setPrice(99.99f);
-        productResponse.setClient(1);
+        productResponse.setClients(List.of(1));
 
         when(productService.createProduct(any(ProductRequest.class))).thenReturn(productResponse);
 
@@ -95,7 +96,7 @@ class ProductControllerTest {
                 .andExpect(jsonPath("$.id", is(1)))
                 .andExpect(jsonPath("$.name", is("Test Product")))
                 .andExpect(jsonPath("$.price", is(99.99)))
-                .andExpect(jsonPath("$.client", is(1)));
+                .andExpect(jsonPath("$.clients", is(List.of(1))));
 
         verify(productService, times(1)).createProduct(any(ProductRequest.class));
     }
@@ -142,7 +143,7 @@ class ProductControllerTest {
                 .andExpect(jsonPath("$.id", is(productId)))
                 .andExpect(jsonPath("$.name", is("Test Product")))
                 .andExpect(jsonPath("$.price", is(99.99)))
-                .andExpect(jsonPath("$.client", is(1)));
+                .andExpect(jsonPath("$.clients", is(List.of(1))));
 
         verify(productService, times(1)).getProductById(productId);
     }
@@ -171,7 +172,7 @@ class ProductControllerTest {
         ProductRequest productRequest = new ProductRequest();
         productRequest.setName("Updated Product");
         productRequest.setPrice(149.99f);
-        productRequest.setClient(1);
+        productRequest.setClients(List.of(1));
 
         ProductResponse productResponse = createProductResponse(productId, "Updated Product", 149.99f, 1);
 
@@ -186,7 +187,7 @@ class ProductControllerTest {
                 .andExpect(jsonPath("$.id", is(productId)))
                 .andExpect(jsonPath("$.name", is("Updated Product")))
                 .andExpect(jsonPath("$.price", is(149.99)))
-                .andExpect(jsonPath("$.client", is(1)));
+                .andExpect(jsonPath("$.clients", is(List.of(1))));
 
         verify(productService, times(1)).updateProduct(eq(productId), any(ProductRequest.class));
     }
@@ -265,7 +266,7 @@ class ProductControllerTest {
         response.setId(id);
         response.setName(name);
         response.setPrice(price);
-        response.setClient(clientId);
+        response.setClients(List.of(clientId));
         return response;
     }
 }

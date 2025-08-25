@@ -283,8 +283,10 @@ components:
           type: integer
         name:
           type: string
-        client:
-          type: integer
+        clients:
+          type: array
+          items:
+            type: integer
         price:
           type: number
           format: float
@@ -295,8 +297,10 @@ components:
           type: integer
         name:
           type: string
-        client:
-          type: integer
+        clients:
+          type: array
+          items:
+            type: integer
         price:
           type: number
           format: float

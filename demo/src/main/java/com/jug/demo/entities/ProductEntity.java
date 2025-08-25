@@ -2,6 +2,8 @@ package com.jug.demo.entities;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "products")
 public class ProductEntity {
@@ -14,9 +16,8 @@ public class ProductEntity {
 
     private Float price;
 
-    @ManyToOne
-    @JoinColumn(name = "client_id", nullable = false)
-    private ClientEntity client;
+    @ManyToMany(mappedBy = "products")
+    private List<ClientEntity> clients;
 
     // Getters e Setters
     public Long getId() {
@@ -43,11 +44,11 @@ public class ProductEntity {
         this.price = price;
     }
 
-    public ClientEntity getClient() {
-        return client;
+    public List<ClientEntity> getClients() {
+        return clients;
     }
 
-    public void setClient(ClientEntity client) {
-        this.client = client;
+    public void setClients(List<ClientEntity> clients) {
+        this.clients = clients;
     }
 }
