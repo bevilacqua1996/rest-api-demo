@@ -7,9 +7,9 @@ spring:
     name: JUG Spring Demo
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/
-    username:
-    password:
+    url: jdbc:postgresql://localhost:5432/meubanco
+    username: meuusuario
+    password: minhasenha
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
