@@ -19,11 +19,14 @@ import java.util.Optional;
 @RestController
 public class ProductController implements ProductApi {
 
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
 
-    @Autowired
-    private TaxCreditService taxCreditService;
+    private final TaxCreditService taxCreditService;
+
+    public ProductController(ProductService productService, TaxCreditService taxCreditService) {
+        this.productService = productService;
+        this.taxCreditService = taxCreditService;
+    }
 
     @Override
     public ResponseEntity<ProductResponse> createProduct(ProductRequest productRequest) {
