@@ -1,0 +1,10 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update # ou create-drop em testes; se usa Flyway/Liquibase, desabilite isto
+    properties:
+      hibernate:
+        format_sql: true
+  datasource:
+    # Será sobrescrito pelo @DynamicPropertySource, mas não deixe inválido aqui
+    driver-class-name: org.postgresql.Driver

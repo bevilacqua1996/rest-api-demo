@@ -29,7 +29,21 @@
 	<properties>
 		<java.version>17</java.version>
 	</properties>
-	<dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Alinhar versões do Testcontainers -->
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers-bom</artifactId>
+                <version>1.20.2</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
@@ -111,7 +125,28 @@
 			<scope>test</scope>
 		</dependency>
 
-	</dependencies>
+        <!-- Testcontainers core -->
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Módulo do banco: Postgres (troque para mysql/mariadb se for o caso) -->
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Driver JDBC do seu banco -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
 
 	<build>
 		<finalName>spring-app</finalName> <!-- This will set the JAR name to spring-app.jar -->
