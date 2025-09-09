@@ -48,3 +48,6 @@ management:
   metrics:
     tags:
       application: Spring-Boot-App
+
+tax-credit:
+  url: http://localhost:8080/api/tax-credit
